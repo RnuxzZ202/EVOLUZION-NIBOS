@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EVOLUZION OFFICIAL WEB</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #808080; /* Background abu-abu */
+            color: white; /* Warna teks default */
+        }
+
+        header {
+            width: 100%;
+            padding: 20px;
+            background: url('https://i.pinimg.com/736x/93/73/86/937386ac1eb9c6c434f704fb1756b32b.jpg') no-repeat center center/cover;
+            text-align: center;
+            color: black; /* Warna teks header hitam */
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        .subheader {
+            margin-top: 10px;
+            font-size: 14px;
+            font-style: italic;
+            color: white; /* Warna teks subheader putih */
+        }
+
+        .button-container {
+            margin: 20px 0;
+            width: 80%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .button {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            background-color: black; /* Warna latar belakang tombol hitam */
+            color: white; /* Warna teks tombol putih */
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .description {
+            padding: 20px;
+            text-align: center;
+            font-size: 16px;
+            color: white; /* Warna teks deskripsi putih */
+        }
+
+        .chat-container {
+            width: 80%;
+            margin-top: 20px;
+            background-color: white; /* Background tempat chat putih */
+            padding: 10px;
+            border-radius: 5px;
+            overflow-y: auto;
+            max-height: 200px; /* Batas ketinggian tempat chat agar dapat discroll */
+        }
+
+        .chat-input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>EVOLUZION OFFICIAL WEB</h1>
+    <div class="subheader">Made By @RafaelW</div>
+</header>
+
+<div class="button-container">
+    <button class="button" onclick="navigateTo('https://chat.whatsapp.com/E0jYYG0xIaXBLbqGBKOC3u')">AYO GABUNG</button>
+    <button class="button" onclick="navigateTo('https://evoluzion-asik.vercel.app/')">SELANJUTNYA</button>
+</div>
+
+<div class="description">
+    Server kami menyediakan banyak Fitur, juga banyak warganya, Tunggu apalagi ayo main!!
+</div>
+
+<div class="chat-container" id="chat-container">
+    <!-- Tempat untuk chat -->
+</div>
+
+<form id="chat-form">
+    <input type="text" id="username-input" class="chat-input" placeholder="Masukkan nama Anda">
+    <input type="file" id="file-input" accept="image/*, video/*" class="chat-input">
+    <input type="text" id="message-input" class="chat-input" placeholder="Ketik pesan Anda di sini">
+    <button type="submit" class="button">KIRIM</button>
+</form>
+
+<script>
+    const chatForm = document.getElementById('chat-form');
+    const usernameInput = document.getElementById('username-input');
+    const fileInput = document.getElementById('file-input');
+    const messageInput = document.getElementById('message-input');
+    const chatContainer = document.getElementById('chat-container');
+    const forbiddenWords = ['babi', 'kntl', 'anjg'];
+
+    chatForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const username = usernameInput.value.trim();
+        const message = messageInput.value.trim();
+        const file = fileInput.files[0];
+
+        if (!username) {
+            alert('Silakan isi nama Anda');
+            return;
+        }
+
+        if (!message && !file) {
+            alert('Silakan isi pesan atau unggah foto/video');
+            return;
+        }
+
+        if (message) {
+            const sanitizedMessage = sanitizeMessage(message);
+            if (!sanitizedMessage) {
+                alert('ANDA TIDAK BOLEH TOKSIS');
+                return;
+            }
+        }
+
+        if (file && file.size > 5 * 1024 * 1024) {
+            alert('Ukuran file melebihi batas maksimum (5MB)');
+            return;
+        }
+
+        // Proses pengiriman data ke server (Anda dapat menyesuaikan sesuai kebutuhan)
+        // Di sini Anda dapat mengirim nama pengguna, pesan, dan file ke backend untuk diproses
+
+        // Setelah pengiriman berhasil, Anda dapat menambahkan pesan atau file ke tampilan chat
+
+        if (message) {
+            appendMessage(username, message);
+        }
+
+        if (file) {
+            const fileType = getFileType(file.type);
+            appendMessage(username, `Mengirim ${fileType}: <a href="${URL.createObjectURL(file)}" target="_blank">${file.name}</a>`);
+        }
+
+        // Bersihkan input setelah pengiriman
+        usernameInput.value = '';
+        fileInput.value = '';
+        messageInput.value = '';
+    });
+
+    function getFileType(mimeType) {
+        if (mimeType.startsWith('image/')) {
+            return 'gambar';
+        } else if (mimeType.startsWith('video/')) {
+            return 'video';
+        } else {
+            return 'file';
+        }
+    }
+
+    function sanitizeMessage(message) {
+        const words = message.split(' ');
+        for (const word of words) {
+            if (forbiddenWords.includes(word.toLowerCase())) {
+                return null;
+            }
+        }
+        return message;
+    }
+
+    function appendMessage(username, message) {
+        const messageElement = document.createElement('div');
+        messageElement.innerHTML = `<strong>${username}:</strong> ${message}`;
+        messageElement.style.color = 'black'; // Warna teks pesan hitam
+        chatContainer.appendChild(messageElement);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    function navigateTo(url) {
+        window.location.href = url;
+    }
+</script>
+</body>
+</html>
