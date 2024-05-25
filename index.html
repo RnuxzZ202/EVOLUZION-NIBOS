@@ -81,6 +81,17 @@
             border-radius: 5px;
             box-sizing: border-box;
         }
+
+        .chat-input-file {
+            display: none;
+        }
+
+        #file-label {
+            display: block;
+            margin-top: 10px;
+            text-align: center;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -105,7 +116,8 @@
 
 <form id="chat-form">
     <input type="text" id="username-input" class="chat-input" placeholder="Masukkan nama Anda">
-    <input type="file" id="file-input" accept="image/*, video/*" class="chat-input">
+    <input type="file" id="file-input" accept="image/*, video/*" class="chat-input-file">
+    <label for="file-input" id="file-label">Unggah Foto/Video</label>
     <input type="text" id="message-input" class="chat-input" placeholder="Ketik pesan Anda di sini">
     <button type="submit" class="button">KIRIM</button>
 </form>
@@ -188,6 +200,8 @@
     }
 
     function appendMessage(username, message) {
+     
+        function appendMessage(username, message) {
         const messageElement = document.createElement('div');
         messageElement.innerHTML = `<strong>${username}:</strong> ${message}`;
         messageElement.style.color = 'black'; // Warna teks pesan hitam
@@ -201,3 +215,4 @@
 </script>
 </body>
 </html>
+
